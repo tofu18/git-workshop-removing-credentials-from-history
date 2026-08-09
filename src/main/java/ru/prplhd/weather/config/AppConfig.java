@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.prplhd.weather.client.OpenWeatherApiClient;
@@ -19,10 +20,12 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @PropertySource("classpath:app.properties")
+@EnableScheduling
 @ComponentScan({
         "ru.prplhd.weather.service",
         "ru.prplhd.weather.persistence.util",
-        "ru.prplhd.weather.mapper"
+        "ru.prplhd.weather.mapper",
+        "ru.prplhd.weather.scheduler"
 })
 public class AppConfig {
 
@@ -67,6 +70,7 @@ public class AppConfig {
                 httpClient,
                 jsonMapper,
                 env.getRequiredProperty("openweather.base-url"),
+                env.getRequiredProperty("openweather.location-search-limit", Integer.class),
                 env.getRequiredProperty("openweather.api-key")
         );
     }
